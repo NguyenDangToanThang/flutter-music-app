@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:music/res/app_images.dart';
 import 'package:music/res/app_svg.dart';
+import 'package:music/view/home/components/recently_page.dart';
+import 'package:music/view/home/components/recently_played_list.dart';
 
 import '../../../res/app_colors.dart';
 
@@ -53,9 +55,16 @@ class HomeIntroBox extends StatelessWidget {
                           ),
                         ),
                         alignment: Alignment.center,
-                        child: const Text(
-                          'See Recently',
-                          style: TextStyle(color: Colors.white, fontSize: 8),
+                        child: InkWell(
+                          onTap: () =>  {Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const RecentlyPage()),
+                            )
+                          },
+                          child: const Text(
+                            'See Recently',
+                            style: TextStyle(color: Colors.white, fontSize: 8),
+                          ),
                         ),
                       ),
                       const SizedBox(
