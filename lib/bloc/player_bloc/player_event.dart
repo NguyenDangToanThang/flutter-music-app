@@ -36,6 +36,14 @@ class OnTapFavouriteEvent extends PlayerEvent{
   List<Object> get props=>[file,context];
 }
 
+class OnTapLoopEvent extends PlayerEvent{
+  final bool loop;
+  const OnTapLoopEvent({this.loop = true});
+  @override
+  List<Object> get props=>[loop];
+}
+
+
 class OnTapForwardEvent extends PlayerEvent{}
 class OnTapBackwardEvent extends PlayerEvent{}
 
