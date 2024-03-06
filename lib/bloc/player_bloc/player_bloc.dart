@@ -15,6 +15,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   final AudioPlayer player;
   bool isPlaying = false;
   bool isLoop = true;
+  String? path;
   Timer? timer;
   final dbHelper = DbHelper();
 
@@ -49,6 +50,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   Future<void> _onPlayEvent(OnPlayEvent event,
       Emitter<PlayerState> emit) async {
     await player.setFilePath(event.file.path.toString());
+    path = event.file.path.toString();
     player.play();
     isPlaying = true;
     double progress = 0.0;
@@ -57,7 +59,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         isFavourite: event.file.isFavourite == 1,
         status: SongStatus.playing,
         file: event.file));
-    Timer.periodic(const Duration(milliseconds: 1), (timer) {
+    Timer.periodic(const Duration(milliseconds: 1), (timer) async {
       progress = player.duration == null
           ? 0.0
           : player.position.inMilliseconds / player.duration!.inMilliseconds;
@@ -72,9 +74,25 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       Emitter<PlayerState> emit) async {
     if (event.progress >= 1.0) {
       if (!isLoop) {
+        timer?.cancel();
+        timer = null;
+        // await player.setFilePath(path!);
         player.pause();
         player.seek(const Duration(seconds: 0));
-        emit(state.copyWith(progress: 0.0, isPlaying: false));
+        isPlaying = false;
+        emit(state.copyWith(
+            progress: 0.0,
+            isPlaying: false,
+        ));
+        Timer.periodic(const Duration(milliseconds: 1), (timer) async {
+          var progress = player.duration == null
+              ? 0.0
+              : player.position.inMilliseconds / player.duration!.inMilliseconds;
+          add(ProgressUpdateEvent(progress: progress));
+          if (progress >= 1.0) {
+            timer.cancel();
+          }
+        });
         // add(OnPlayEvent(file: state.file!));
       }
       else{
