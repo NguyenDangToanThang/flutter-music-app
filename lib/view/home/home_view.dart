@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music/bloc/album_bloc/album_bloc.dart';
 import 'package:music/bloc/home_bloc/home_event.dart';
+import 'package:music/utils/utils.dart';
 import 'package:music/view/common_widget/app_bar.dart';
 import 'package:music/view/common_widget/loading_files.dart';
 import 'package:music/view/home/components/home_top_box.dart';
@@ -33,7 +34,7 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
         body: SafeArea(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -78,7 +79,6 @@ class _HomeViewState extends State<HomeView> {
                               Spacer(),
                               InkWell(
                                 // onTap: () => Utils.go(context: context, screen: AllMusicAlbum()),
-
                                 child: Text(
                                   'See all',
                                   style:
@@ -87,6 +87,7 @@ class _HomeViewState extends State<HomeView> {
                               )
                             ],
                           ),
+
                           Expanded(child: FilesLoading()),
                         ],
                       );
