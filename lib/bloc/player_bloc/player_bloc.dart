@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -13,6 +14,7 @@ part 'player_state.dart';
 class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   final AudioPlayer player;
   bool isPlaying = false;
+  bool isLoop = true;
   Timer? timer;
   final dbHelper = DbHelper();
 
@@ -25,10 +27,11 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on(_onTapFavouriteEvent);
     on(_onTapForwardEvent);
     on(_onTapBackwardEvent);
+    on(_onTapLoopEvent);
   }
 
-  Future<void> _onPlayPauseEvent(
-      PlayPauseEvent event, Emitter<PlayerState> emit) async {
+  Future<void> _onPlayPauseEvent(PlayPauseEvent event,
+      Emitter<PlayerState> emit) async {
     if (isPlaying) {
       player.pause();
       emit(state.copyWith(
@@ -43,8 +46,8 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     isPlaying = event.isPlaying;
   }
 
-  Future<void> _onPlayEvent(
-      OnPlayEvent event, Emitter<PlayerState> emit) async {
+  Future<void> _onPlayEvent(OnPlayEvent event,
+      Emitter<PlayerState> emit) async {
     await player.setFilePath(event.file.path.toString());
     player.play();
     isPlaying = true;
@@ -65,24 +68,31 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     });
   }
 
-  Future<void> _progressUpdate(
-      ProgressUpdateEvent event, Emitter<PlayerState> emit) async {
-    if (event.progress == 1.0) {
-      // player.pause();
-      // player.seek(const Duration(seconds: 0));
-      // emit(state.copyWith(progress: 0.0,isPlaying: false));
-      add(OnPlayEvent(file: state.file!));
-    } else {
+  Future<void> _progressUpdate(ProgressUpdateEvent event,
+      Emitter<PlayerState> emit) async {
+    if (event.progress >= 1.0) {
+      if (!isLoop) {
+        player.pause();
+        player.seek(const Duration(seconds: 0));
+        emit(state.copyWith(progress: 0.0, isPlaying: false));
+        // add(OnPlayEvent(file: state.file!));
+      }
+      else{
+        add(OnPlayEvent(file: state.file!));
+      }
+    }
+    else {
       emit(state.copyWith(
         progress: event.progress,
       ));
+
     }
   }
 
-  Future<void> _onTapFavouriteEvent(
-      OnTapFavouriteEvent event, Emitter<PlayerState> emit) async {
+  Future<void> _onTapFavouriteEvent(OnTapFavouriteEvent event,
+      Emitter<PlayerState> emit) async {
     final alreadyExist =
-        await dbHelper.isFavoriteExists(event.file.name.toString());
+    await dbHelper.isFavoriteExists(event.file.name.toString());
     if (alreadyExist) {
       showDialog(
         context: event.context,
@@ -134,7 +144,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     } else {
       await dbHelper.insert(event.file);
       emit(state.copyWith(isFavourite: true));
-
     }
   }
 
@@ -147,15 +156,20 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     }
   }
 
+  Future<void> _onTapLoopEvent(OnTapLoopEvent event, Emitter<PlayerState> emit) async{
+    isLoop = !state.isLoop;
+    emit(state.copyWith(isLoop: !state.isLoop));
+  }
   void _onTapBackwardEvent(
       OnTapBackwardEvent event, Emitter<PlayerState> emit) {
     if (player.position.inSeconds > 10) {
       player.seek(Duration(seconds: player.position.inSeconds - 10));
     } else {
-      player.seek(const Duration(seconds: 0));
+      // player.seek(const Duration(seconds: 0));
     }
     emit(state.copyWith(
         progress:
             player.position.inMilliseconds / player.duration!.inMilliseconds));
   }
 }
+
