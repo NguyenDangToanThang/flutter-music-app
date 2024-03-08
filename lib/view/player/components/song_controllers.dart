@@ -56,7 +56,17 @@ class SongControllers extends StatelessWidget {
             onTap: () => context.read<PlayerBloc>().add(OnTapForwardEvent()),
             child: SvgPicture.asset(AppSvg.next, width: 25,)),
         const SizedBox(width: 20,),
-        SvgPicture.asset(AppSvg.loop, width: 20,),
+
+        GestureDetector(
+          onTap: () => context.read<PlayerBloc>().add(OnTapLoopEvent()),
+          child: BlocBuilder<PlayerBloc, PlayerState>(
+            buildWhen: (previousState, currentState) => previousState.isLoop != currentState.isLoop,
+            builder: (BuildContext context, PlayerState state) {
+            return SvgPicture.asset(AppSvg.loop, width: 20, color: state.isLoop ? blueBackground : Colors.black87);
+          },
+          )
+
+        )
       ],
     );
   }

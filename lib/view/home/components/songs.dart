@@ -40,11 +40,7 @@ class SongsList extends StatelessWidget {
                 context.read<AlbumBloc>().add(GetFolderEvent());
                 Utils.go(context: context, screen: AllMusicAlbum());
               },
-              child: const Text(
-                'See all',
-                style:
-                    TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
-              ),
+
             )
           ],
         ),
