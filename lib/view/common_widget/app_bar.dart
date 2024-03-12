@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:music/bloc/album_bloc/album_bloc.dart';
+import 'package:music/bloc/album_bloc/album_event.dart';
 import 'package:music/utils/utils.dart';
+import 'package:music/view/all_music/all_music.dart';
+import 'package:music/view/all_music/components/folders_list.dart';
+import 'package:music/view/all_music/components/song_list.dart';
+import 'package:music/view/common_widget/custom_search_delegate.dart';
 
 import '../../res/app_svg.dart';
 class CustomAppBar extends StatelessWidget {
@@ -22,10 +29,18 @@ class CustomAppBar extends StatelessWidget {
 
          Positioned(right: 1, child:  postIcon?? Row(
            children: [
-             SvgPicture.asset(
-               AppSvg.search,
-               color: Colors.black87,
-               width: 20,
+             GestureDetector(
+               onTap: () {
+                 showSearch(
+                   context: context,
+                   delegate: CustomSearchDelegate(),
+                 );
+               },
+               child: SvgPicture.asset(
+                 AppSvg.search,
+                 color: Colors.black87,
+                 width: 20,
+               ),
              ),
              const SizedBox(
                width: 10,

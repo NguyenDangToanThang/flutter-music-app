@@ -61,8 +61,8 @@ class AllMusicAlbum extends StatelessWidget {
                         .pageController,
                     physics: const NeverScrollableScrollPhysics(),
                     children: const [
-                      FolderList(),
-                      SongList(),
+                      FolderList(name: '',),
+                      SongList(name: '',),
                     ],
                   ))
                 ],

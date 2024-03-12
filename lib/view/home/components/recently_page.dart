@@ -51,10 +51,10 @@ class _RecentlyPageState extends State<RecentlyPage> {
         body: const TabBarView(
           children: [
             // Trang con cho tab 'Songs'
-            SongList(),
+            SongList(name: '',),
 
             // Trang con cho tab 'Albums'
-            FolderList(),
+            FolderList(name: '',),
           ],
         ),
       ),
