@@ -20,7 +20,17 @@ class SongControllers extends StatelessWidget {
       children: [
         // SvgPicture.asset(AppSvg.loop, width: 20,),
         GestureDetector(
-            child: const Icon(Icons.volume_down_alt,color: Colors.black,)),
+            onTap: () => context.read<PlayerBloc>().add(const OnTapVolumeEvent()),
+            child: BlocBuilder<PlayerBloc, PlayerState>(
+              buildWhen: (previousState, currentState) => previousState.isMuted != currentState.isMuted,
+              builder: (BuildContext context, PlayerState state) {
+                return state.isMuted ?
+                const Icon(Icons.volume_mute,color: Colors.black)
+                    : const Icon(Icons.volume_down_alt,color: Colors.black);
+              },
+            )
+
+        ),
         const SizedBox(width: 20,),
         GestureDetector(
           onTap: () => context.read<PlayerBloc>().add(OnTapBackwardEvent()),
@@ -58,7 +68,7 @@ class SongControllers extends StatelessWidget {
         const SizedBox(width: 20,),
 
         GestureDetector(
-          onTap: () => context.read<PlayerBloc>().add(OnTapLoopEvent()),
+          onTap: () => context.read<PlayerBloc>().add(const OnTapLoopEvent()),
           child: BlocBuilder<PlayerBloc, PlayerState>(
             buildWhen: (previousState, currentState) => previousState.isLoop != currentState.isLoop,
             builder: (BuildContext context, PlayerState state) {
@@ -71,3 +81,5 @@ class SongControllers extends StatelessWidget {
     );
   }
 }
+
+// child: const Icon(Icons.volume_down_alt,color: Colors.black,)

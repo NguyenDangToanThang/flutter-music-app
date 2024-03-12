@@ -9,6 +9,7 @@ class PlayerState extends Equatable {
   final AudioFile? file;
   final SongStatus status;
   final bool isLoop;
+  final bool isMuted;
 
   const PlayerState(
       {this.isPlaying = true,
@@ -16,7 +17,8 @@ class PlayerState extends Equatable {
       this.progress = 0.0,
       this.status = SongStatus.stopped,
       this.file,
-      this.isLoop = true});
+      this.isLoop = true,
+      this.isMuted = false});
 
   PlayerState copyWith(
       {bool? isPlaying,
@@ -24,18 +26,20 @@ class PlayerState extends Equatable {
       bool? isFavourite,
       SongStatus? status,
       AudioFile? file,
-      bool? isLoop}) {
+      bool? isLoop,
+      bool? isMuted}) {
     return PlayerState(
         isFavourite: isFavourite ?? this.isFavourite,
         isPlaying: isPlaying ?? this.isPlaying,
         progress: progress ?? this.progress,
         status: status ?? this.status,
         file: file ?? this.file,
-        isLoop: isLoop ?? this.isLoop
+        isLoop: isLoop ?? this.isLoop,
+        isMuted: isMuted ?? this.isMuted
     );
   }
 
   @override
   List<Object> get props =>
-      [isPlaying, progress, isFavourite, status, file ?? '',isLoop];
+      [isPlaying, progress, isFavourite, status, file ?? '',isLoop,isMuted];
 }

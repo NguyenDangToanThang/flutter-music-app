@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music/bloc/album_bloc/album_bloc.dart';
 import 'package:music/bloc/home_bloc/home_event.dart';
 import 'package:music/utils/utils.dart';
+import 'package:music/view/all_music/all_music.dart';
 import 'package:music/view/common_widget/app_bar.dart';
 import 'package:music/view/common_widget/loading_files.dart';
 import 'package:music/view/home/components/home_top_box.dart';
@@ -30,7 +31,7 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    var s = context.read<AlbumBloc>().state;
+    // var s = context.read<AlbumBloc>().state;
     return Scaffold(
         body: SafeArea(
       child: Padding(
@@ -55,13 +56,9 @@ class _HomeViewState extends State<HomeView> {
                     buildWhen: (previous, current) => current.songListStatus!=previous.songListStatus,
                     builder: (context, loadingState) {
                       if(loadingState.songListStatus==Status.complete){
-                        if (loadingState.songList.isEmpty) {
-                          return HomeFolderList(
-                            state: s,
+                          return const HomeFolderList(
+                            // state: s,
                           );
-                        } else {
-                          return const SongsList();
-                        }
                       }
                       return const Column(
                         children: [
@@ -78,7 +75,7 @@ class _HomeViewState extends State<HomeView> {
                               ),
                               Spacer(),
                               InkWell(
-                                // onTap: () => Utils.go(context: context, screen: AllMusicAlbum()),
+                                // onTap: () => Navigator.push(context, AllMusicAlbum()),
                                 child: Text(
                                   'See all',
                                   style:

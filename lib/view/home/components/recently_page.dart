@@ -44,17 +44,17 @@ class _RecentlyPageState extends State<RecentlyPage> {
             IconButton(onPressed: () {}, icon: const Icon(Icons.announcement)),
           ],
           bottom: const TabBar(tabs: [
-            Tab(text: 'Songs'),
-            Tab(text: 'Albums')
+            Tab(text: 'Albums'),
+            Tab(text: 'Songs')
           ]),
         ),
         body: const TabBarView(
           children: [
+            FolderList(),
             // Trang con cho tab 'Songs'
             SongList(),
-
             // Trang con cho tab 'Albums'
-            FolderList(),
+
           ],
         ),
       ),

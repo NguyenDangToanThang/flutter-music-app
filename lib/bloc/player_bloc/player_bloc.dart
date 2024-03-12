@@ -12,9 +12,10 @@ part 'player_event.dart';
 part 'player_state.dart';
 
 class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
-  final AudioPlayer player;
+  AudioPlayer player;
   bool isPlaying = false;
   bool isLoop = true;
+  bool isMuted = false;
   String? path;
   Timer? timer;
   final dbHelper = DbHelper();
@@ -29,6 +30,17 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on(_onTapForwardEvent);
     on(_onTapBackwardEvent);
     on(_onTapLoopEvent);
+    on(_onTapVolumeEvent);
+  }
+
+  Future<void> _onTapVolumeEvent(OnTapVolumeEvent event, Emitter<PlayerState> emit) async {
+    isMuted = !state.isMuted;
+    if(isMuted) {
+      player.setVolume(0.0);
+    } else {
+      player.setVolume(1.0);
+    }
+    emit(state.copyWith(isMuted: !state.isMuted));
   }
 
   Future<void> _onPlayPauseEvent(PlayPauseEvent event,

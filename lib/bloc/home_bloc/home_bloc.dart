@@ -20,6 +20,8 @@ class HomeBloc extends Bloc<HomeEvents,HomeState>{
     on(_onAddToFavEvent);
     on(_onAddToAlbumEvent);
   }
+
+
   Future<void> _onSongFileEvent(GetSongEvent event,Emitter<HomeState> emit) async {
     add(ChangeLoadingStatusSong(songStatus: Status.loading,));
     try{

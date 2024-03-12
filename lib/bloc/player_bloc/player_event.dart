@@ -43,6 +43,13 @@ class OnTapLoopEvent extends PlayerEvent{
   List<Object> get props=>[loop];
 }
 
+class OnTapVolumeEvent extends PlayerEvent {
+  final bool isMuted;
+  const OnTapVolumeEvent({this.isMuted = false});
+  @override
+  List<Object> get props=>[isMuted];
+}
+
 
 class OnTapForwardEvent extends PlayerEvent{}
 class OnTapBackwardEvent extends PlayerEvent{}
